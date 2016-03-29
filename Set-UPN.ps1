@@ -14,24 +14,27 @@
 #                                                                                       #
 #                                                                                       #
 #########################################################################################
-
-
 Import-Module ActiveDirectory
 $DomainName = "@ExchangeBytes.com"
-$ADUsers = Get-ADUser -Filter * 
+$ADUsers = Get-ADUser -Filter * -Properties MailNickName
 foreach ($User in $ADUsers) {
 	
-
+	if ($User.MailNickName -ne $null) {
+		$upn = $User.MailNickName + $DomainName
+		Set-ADUser -Identity $user -UserPrincipalName $upn
+	}
+	Else {
 		$upn = $User.SamAccountName + $DomainName
 		Set-ADUser -Identity $user -UserPrincipalName $upn
+	}
 	
 	
 }
 # SIG # Begin signature block
 # MIIUhAYJKoZIhvcNAQcCoIIUdTCCFHECAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
-# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQU40SPtYtLpgqIjLqaG1xiYDi/
-# uf+ggg8TMIIEFDCCAvygAwIBAgILBAAAAAABL07hUtcwDQYJKoZIhvcNAQEFBQAw
+# AgEAAgEAAgEAAgEAAgEAMCEwCQYFKw4DAhoFAAQUeGP+t7Zhu5YQbN1kCiGKNWJt
+# 1POggg8TMIIEFDCCAvygAwIBAgILBAAAAAABL07hUtcwDQYJKoZIhvcNAQEFBQAw
 # VzELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExEDAOBgNV
 # BAsTB1Jvb3QgQ0ExGzAZBgNVBAMTEkdsb2JhbFNpZ24gUm9vdCBDQTAeFw0xMTA0
 # MTMxMDAwMDBaFw0yODAxMjgxMjAwMDBaMFIxCzAJBgNVBAYTAkJFMRkwFwYDVQQK
@@ -117,25 +120,25 @@ foreach ($User in $ADUsers) {
 # Q2xhc3MgMiBQcmltYXJ5IEludGVybWVkaWF0ZSBPYmplY3QgQ0ECAhE+MAkGBSsO
 # AwIaBQCgeDAYBgorBgEEAYI3AgEMMQowCKACgAChAoAAMBkGCSqGSIb3DQEJAzEM
 # BgorBgEEAYI3AgEEMBwGCisGAQQBgjcCAQsxDjAMBgorBgEEAYI3AgEVMCMGCSqG
-# SIb3DQEJBDEWBBSNzDcVvemd0F7JyNdS2OD4GxZPyjANBgkqhkiG9w0BAQEFAASC
-# AQBk0CEE0AkLinLJOFfKy8ojRZnyKWHmUqTvhGqkZ8ah4yUN/zbJ6gvSB1KS6/HY
-# daCt5wvDoUJrL5lQj91+OeckX27evTv15q1sGNlThLewJxEoL9TPyK5abcCeUIAO
-# FjrdtdTkDbClLB/4BbHPL5ty7qQYI46xQBd+Sg4Sos1nWlB0ncFfDsA3puzdiFcs
-# 4V8P7Gr1cjQhbWgJFJ9C09nrhuKaIrVXow6MPKiRBel8UiWFA+jo8pYgJU4FcpnQ
-# +iIg4T+2s4dv8f+2M9dRivsNOoApQxAYKTENZzBHZf7Uy26C2ZroFIDOqW+8SgQ5
-# t+tEB/mJAze1w+cTVIopDF5PoYICojCCAp4GCSqGSIb3DQEJBjGCAo8wggKLAgEB
+# SIb3DQEJBDEWBBTLX3LgBYKjsOA28J54phICjd53ADANBgkqhkiG9w0BAQEFAASC
+# AQC4b52oFMjTZYIn6SfCoP1oWGrPV8W1KmmhoiDz/3JVXpIwIdA5xJx33oSk9IKB
+# xU5xEzLaqHFbqtfzZ2iwPHJpQd2jXl/0Zodjd1hoznYUJhuCg5AaRYoUPp7bp1yx
+# XkArvhhGfDlZESuHa94pkPRYsD1qIF781eJ8iUri+0Knz9j6llQt3fazcgFtyPbo
+# Mve68q1x1Q2sWjTcxKaMIs21qwtZncbDphcw4hHKbuBX/FO+MpEWD5DL7CclGiew
+# lhgi9flTr0qvSr6MJymrXw+lc/whQR8u6VoSqrM7r73w4jeBchCyZqURj1wtXewv
+# xLglqsTuzkNHbM+0SFcWAGEjoYICojCCAp4GCSqGSIb3DQEJBjGCAo8wggKLAgEB
 # MGgwUjELMAkGA1UEBhMCQkUxGTAXBgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKDAm
 # BgNVBAMTH0dsb2JhbFNpZ24gVGltZXN0YW1waW5nIENBIC0gRzICEhEhQFwfDtJY
 # iCvlTYaGuhHqRTAJBgUrDgMCGgUAoIH9MBgGCSqGSIb3DQEJAzELBgkqhkiG9w0B
-# BwEwHAYJKoZIhvcNAQkFMQ8XDTE1MDEyMTE4MjcxNFowIwYJKoZIhvcNAQkEMRYE
-# FL3ZmKRGhFj+d4qtkoQZA67rxGc5MIGdBgsqhkiG9w0BCRACDDGBjTCBijCBhzCB
+# BwEwHAYJKoZIhvcNAQkFMQ8XDTE1MDEyMTE4MzA0MFowIwYJKoZIhvcNAQkEMRYE
+# FLGf+qDiVtMb1/lATF5neNghR1l3MIGdBgsqhkiG9w0BCRACDDGBjTCBijCBhzCB
 # hAQUjOafUBLh0aj7OV4uMeK0K947NDswbDBWpFQwUjELMAkGA1UEBhMCQkUxGTAX
 # BgNVBAoTEEdsb2JhbFNpZ24gbnYtc2ExKDAmBgNVBAMTH0dsb2JhbFNpZ24gVGlt
 # ZXN0YW1waW5nIENBIC0gRzICEhEhQFwfDtJYiCvlTYaGuhHqRTANBgkqhkiG9w0B
-# AQEFAASCAQB/tDGqxN7E4TBLVo5y6m3uX/09OHFbLcteFSzufJgYRWvXQXLJDtWL
-# UDjGTDrUD/kvsEua04/QD0NJfLPTJihHEhponI68QyE3q01VUBMLmBdQ7quvMmFN
-# yn4ayHe8Z3LUVaAjBSssgpBETcg0uzQ2Cm9JRQY3WcbPQtgi8pM9LcGpD6aAghqV
-# D0A0lmqtd5BCYM810Hvk9xJvV/XOwW6AdHSPLsli36NI3LlSbbPtqpnkI5Z8JbeK
-# kZ2CE2oYddCEHwV51W53ua9E3EzjrNns0d6HBZDzwhF6WiZIHRm2qFtzMaMZkWx6
-# N4RiHa5OWd7izGQilhLUGJb1elxiyDPC
+# AQEFAASCAQCgJqNuzI75uXIqdQ1kL8f5DYYvDnzX2yBOWd8DouE5oHp33TFEHnoF
+# DehN7xp9iK2DchwALGMNpYzplHKkZH6sVYqfW/seI7sTQXWPGDQbVrkZ9ChvtlSp
+# ZbO2evixYLysjxIGgEJIV9AwjrgMdYNyUyipGezlCmqUIJmylKhsBokpfF60VOTe
+# QQ44Zr0ojGZQ1/RlNaGTp8kf9Yd/UGqh+klHR7XaTpIqda4CS8eUI1C2vz2Az7sl
+# 2alCI5ytVSykLJeCaYKR3GPI7XwObk+G+U2dlWkMvKCtx1hw9OI8WNahrhqBV1p0
+# OK4Gp6EtyZYgrLD0L4rFIF8LuTkZIbpX
 # SIG # End signature block
